@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using APIFake.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace APIFake
 {
@@ -25,6 +27,8 @@ namespace APIFake
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<RefugioDbContext>(options => 
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnectionString")));
             services.AddControllers();
         }
 
