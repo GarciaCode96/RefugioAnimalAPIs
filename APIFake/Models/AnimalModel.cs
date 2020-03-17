@@ -12,13 +12,4 @@ namespace APIFake.Models
         public string Nombre { get; set; }
         public DateTime Fecha_Nacimiento { get; set; }
     }
-
-    public class AnimalCreateModel
-    {
-        [Required]
-        [StringLength(150)]
-        public string Nombre { get; set; }
-        [Required]
-        public DateTime Fecha_Nacimiento { get; set; }
-    }
 }

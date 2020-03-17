@@ -32,7 +32,7 @@ namespace APIFake.Controllers
             }).ToListAsync();
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name="ObtenerAnimal")]
         public async Task<ActionResult<AnimalModel>> Get(int id)
         {
             AnimalEntity Animal = await _context.Animal.FindAsync(id);
@@ -50,22 +50,28 @@ namespace APIFake.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post(AnimalCreateModel model)
+        public async Task<ActionResult> Post([FromBody] AnimalEntity AnimalModel)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("El model no es válido");
-            }
-
-            _context.Add(new AnimalEntity
-            {
-                Nombre = model.Nombre,
-                Fecha_Nacimiento = model.Fecha_Nacimiento
-            });
+            _context.Add(AnimalModel);
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return new CreatedAtRouteResult("ObtenerAnimal", new { id = AnimalModel.Id }, AnimalModel);
         }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult> Put([FromBody] AnimalEntity AnimalModel, int id)
+        {
+            if(id != AnimalModel.Id)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(AnimalModel).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return new CreatedAtRouteResult("ObtenerAnimal", new { id = AnimalModel.Id }, AnimalModel);
+        }
+
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
